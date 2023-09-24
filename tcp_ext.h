@@ -59,7 +59,6 @@ public:
 	void write_bool(bool p_val);
 	void write_short(int16_t p_val);
 	void write_int(int32_t p_val);
-	void write_long(int64_t p_val);
 	void write_float(float p_val);
 	void write_string(const String &p_string);
 	void write_wide_string(const String &p_string);
@@ -68,8 +67,8 @@ public:
 	int8_t read_byte();
 	bool read_bool();
 	int16_t read_short();
+	uint16_t read_ushort();
 	int32_t read_int();
-	int64_t read_long();
 	float read_float();
 	String read_string();
 	String read_wide_string();

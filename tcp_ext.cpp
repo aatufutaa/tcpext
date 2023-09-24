@@ -124,13 +124,6 @@ void TCPExt::write_int(int32_t p_val) {
 	this->write_data(buf, 4);
 }
 
-void TCPExt::write_long(int64_t p_val) {
-	p_val = BSWAP64(p_val);
-	uint8_t buf[8];
-	encode_uint64(p_val, buf);
-	this->write_data(buf, 8);
-}
-
 void TCPExt::write_float(float p_val) {
 	uint8_t buf[4];
 	encode_float(p_val, buf);
@@ -201,19 +194,19 @@ int16_t TCPExt::read_short() {
 	return r;
 }
 
+uint16_t TCPExt::read_ushort() {
+	uint8_t buf[2];
+	this->read_data(buf, 2);
+	uint16_t r = decode_uint16(buf);
+	r = BSWAP16(r);
+	return r;
+}
+
 int32_t TCPExt::read_int() {
 	uint8_t buf[4];
 	this->read_data(buf, 4);
 	uint32_t r = decode_uint32(buf);
 	r = BSWAP32(r);
-	return r;
-}
-
-int64_t TCPExt::read_long() {
-	uint8_t buf[8];
-	this->read_data(buf, 8);
-	uint64_t r = decode_uint64(buf);
-	r = BSWAP64(r);
 	return r;
 }
 
@@ -277,7 +270,6 @@ void TCPExt::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("write_bool", "value"), &TCPExt::write_bool);
 	ClassDB::bind_method(D_METHOD("write_short", "value"), &TCPExt::write_short);
 	ClassDB::bind_method(D_METHOD("write_int", "value"), &TCPExt::write_int);
-	ClassDB::bind_method(D_METHOD("write_long", "value"), &TCPExt::write_long);
 	ClassDB::bind_method(D_METHOD("write_float", "value"), &TCPExt::write_float);
 	ClassDB::bind_method(D_METHOD("write_string", "value"), &TCPExt::write_string);
 	ClassDB::bind_method(D_METHOD("write_wide_string", "value"), &TCPExt::write_wide_string);
@@ -286,8 +278,8 @@ void TCPExt::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("read_byte"), &TCPExt::read_byte);
 	ClassDB::bind_method(D_METHOD("read_bool"), &TCPExt::read_bool);
 	ClassDB::bind_method(D_METHOD("read_short"), &TCPExt::read_short);
+	ClassDB::bind_method(D_METHOD("read_ushort"), &TCPExt::read_ushort);
 	ClassDB::bind_method(D_METHOD("read_int"), &TCPExt::read_int);
-	ClassDB::bind_method(D_METHOD("read_long"), &TCPExt::read_long);
 	ClassDB::bind_method(D_METHOD("read_float"), &TCPExt::read_float);
 	ClassDB::bind_method(D_METHOD("read_string"), &TCPExt::read_string);
 	ClassDB::bind_method(D_METHOD("read_wide_string"), &TCPExt::read_wide_string);
